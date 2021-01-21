@@ -2,9 +2,10 @@
 # By: Kyle Huang
 #
 #           { 0,                                         n <= 0
-# F(n, W) = { F(n - 1, W),                               Wn > W
-#           { max(F(n - 1, W), valn + F(n - 1, W - Wn)), Wn <= W
+# F(n, W) = { F(n - 1, W),                               wtn > W
+#           { max(F(n - 1, W), valn + F(n - 1, W - wtn)), wtn <= W
 #
+# O(2^n)
 
 
 # Function to solve knapsack problem
