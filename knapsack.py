@@ -1,6 +1,7 @@
 from time import time # sys time
 from numpy import random # random num generator
 import sys # cmd line args
+import csv
 
 
 # Recursive solution for Knapsack problem
@@ -47,6 +48,12 @@ def knapsack_dp(k, wt, val, n):
                 v[i][weight] = max(v[i - 1][weight], v[i - 1][weight - wt[i - 1]] + val[i - 1])
     return v[n][k]
 
+def to_csv(rec_time, dp_time, n, w):
+    with open('data.csv', mode='w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file, dialect='excel', lineterminator='\n')
+        for row in rec_time:
+            csv_writer.writerow([w, n, row, row, '\n'])
+
 
 # Driver function
 def main(argv):
@@ -56,6 +63,8 @@ def main(argv):
     arg = int(argv[0])
     itr = int(argv[1])
     w = int(argv[2])
+    rec_time = []
+    dp_time = []
 
     for n in range(arg, arg * itr + 1, arg):
         wt = random.randint(n, size=w)
@@ -64,14 +73,18 @@ def main(argv):
         t1_start = time()
         dp = knapsack_dp(w, wt, val, n)
         t1_stop = time()
-        dp_time = t1_stop - t1_start
+        dp_time.append(t1_stop-t1_start)
 
         t2_start = time()
         rec = knapsack_rec(w, wt, val, n)
         t2_stop = time()
-
+        rec_time.append(t2_stop-t2_start)
+        #to_csv((t2_stop - t2_start), (t1_stop - t1_start), n, w)
         print("N = %d   W = %d   Rec time = %f   DP time = %f    max Rec = %d   max DP = %d"
-              % (n, w, (t2_stop - t2_start), dp_time, rec, dp))
+              % (n, w, (t2_stop - t2_start), (t1_stop - t1_start), rec, dp))
+    to_csv(rec_time, dp_time, n, w)
+
+
 
 # knapsack.py <N items> <increment value> <W value>
 if __name__=="__main__":
