@@ -1,4 +1,4 @@
-from time import time # sys time
+from time import perf_counter# sys time
 from numpy import random # random num generator
 import sys # cmd line args
 import csv
@@ -49,10 +49,12 @@ def knapsack_dp(k, wt, val, n):
     return v[n][k]
 
 def to_csv(rec_time, dp_time, n, w):
+    s = n
     with open('data.csv', mode='w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file, dialect='excel', lineterminator='\n')
-        for row in rec_time:
-            csv_writer.writerow([w, n, row, row, '\n'])
+        for i in range(0, len(rec_time)):
+            csv_writer.writerow([w, s, rec_time[i],  dp_time[i]])
+            s += n
 
 
 # Driver function
@@ -67,22 +69,21 @@ def main(argv):
     dp_time = []
 
     for n in range(arg, arg * itr + 1, arg):
-        wt = random.randint(n, size=w)
-        val = random.randint(n, size=w)
+        wt = random.randint(100, size=n)
+        val = random.randint(100, size=n)
 
-        t1_start = time()
+        t1_start = perf_counter()
         dp = knapsack_dp(w, wt, val, n)
-        t1_stop = time()
+        t1_stop = perf_counter()
         dp_time.append(t1_stop-t1_start)
 
-        t2_start = time()
+        t2_start = perf_counter()
         rec = knapsack_rec(w, wt, val, n)
-        t2_stop = time()
+        t2_stop = perf_counter()
         rec_time.append(t2_stop-t2_start)
-        #to_csv((t2_stop - t2_start), (t1_stop - t1_start), n, w)
         print("N = %d   W = %d   Rec time = %f   DP time = %f    max Rec = %d   max DP = %d"
               % (n, w, (t2_stop - t2_start), (t1_stop - t1_start), rec, dp))
-    to_csv(rec_time, dp_time, n, w)
+    to_csv(rec_time, dp_time, arg, w)
 
 
 
