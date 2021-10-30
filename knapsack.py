@@ -1,10 +1,8 @@
 from time import perf_counter# sys time
 from numpy import random # random num generator
 import sys # cmd line args
-import csv
 
-
-# Recursive solution for Knapsack problem
+# solution for Knapsack problem
 # By: Kyle Huang
 
 # Recursive function to solve knapsack problem
@@ -28,9 +26,6 @@ def knapsack_rec(w, wt, val, n):
 
 
 # Dynamic programming solution for knapsack problem
-#
-#
-# O(nW)
 def knapsack_dp(k, wt, val, n):
     # Base case if not enough elements
     if n < 1 or k < 1:
@@ -38,7 +33,7 @@ def knapsack_dp(k, wt, val, n):
 
     w = max(wt)
     # init matrix for n elements X k
-    v = [[0 for _ in range(k+1)] for _ in range(n + 1)]
+    v = [[0 for weight in range(k + 1)] for i in range(n + 1)]
 
     for i in range(1, n + 1):
         for weight in range(k + 1):
@@ -47,14 +42,6 @@ def knapsack_dp(k, wt, val, n):
             else:
                 v[i][weight] = max(v[i - 1][weight], v[i - 1][weight - wt[i - 1]] + val[i - 1])
     return v[n][k]
-
-def to_csv(rec_time, dp_time, n, w):
-    s = n
-    with open('data.csv', mode='w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file, dialect='excel', lineterminator='\n')
-        for i in range(0, len(rec_time)):
-            csv_writer.writerow([w, s, rec_time[i],  dp_time[i]])
-            s += n
 
 
 # Driver function
@@ -68,6 +55,7 @@ def main(argv):
     rec_time = []
     dp_time = []
 
+    # print all all values given in cmd line args
     for n in range(arg, arg * itr + 1, arg):
         wt = random.randint(100, size=n)
         val = random.randint(100, size=n)
@@ -83,7 +71,7 @@ def main(argv):
         rec_time.append(t2_stop-t2_start)
         print("N = %d   W = %d   Rec time = %f   DP time = %f    max Rec = %d   max DP = %d"
               % (n, w, (t2_stop - t2_start), (t1_stop - t1_start), rec, dp))
-    to_csv(rec_time, dp_time, arg, w)
+
 
 
 
